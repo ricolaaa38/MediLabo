@@ -1,0 +1,44 @@
+<!-- html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Détails patient</title>
+    <link rel="stylesheet" th:href="@{/ui/css/style.css}"/>
+</head>
+<body>
+<h1 th:text="'Fiche patient : ' + ${patient['firstName']} + ' ' + ${patient['lastName']}">Fiche patient</h1>
+<div class="form-container">
+<form class="patient-form" th:action="@{/ui/patients/{id}(id=${patient['id']})}" method="post">
+    <input type="hidden" name="id" th:value="${patient['id']}"/>
+
+    <label>Prénom:<br/>
+        <input type="text" name="firstName" th:value="${patient['firstName']}" required/>
+    </label><br/>
+
+    <label>Nom:<br/>
+        <input type="text" name="lastName" th:value="${patient['lastName']}" required/>
+    </label><br/>
+
+    <label>Date de naissance :<br/>
+        <input type="date" id="dateOfBirth" name="dateOfBirth" th:value="${patient['dateOfBirth'] != null ? patient['dateOfBirth'].substring(0,10) : ''}" required/>
+    </label><br/>
+
+    <label>Genre:<br/>
+        <input type="text" name="gender" th:value="${patient['gender']}" required/>
+    </label><br/>
+
+    <label>Adresse:<br/>
+        <input type="text" name="postalAddress" th:value="${patient['postalAddress']}"/>
+    </label><br/>
+
+    <label>Téléphone:<br/>
+        <input type="text" name="phoneNumber" th:value="${patient['phoneNumber']}"/>
+    </label><br/><br/>
+
+    <button type="submit">Enregistrer</button>
+    <a th:href="@{/ui/}">Retour à la liste</a>
+</form>
+</div>
+</body>
+</html>

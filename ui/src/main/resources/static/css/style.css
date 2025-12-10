@@ -1,0 +1,110 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background-color: #f6f9fc;
+    color: #222;
+    margin: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-family: inherit;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+thead th {
+    background-color: #f4f7fb;
+    color: #222;
+    font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fbfcfd;
+}
+
+tbody tr:hover {
+    background-color: #eef6ff;
+}
+
+.patient-form {
+    width: 100%;
+    max-width: 720px;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    box-sizing: border-box;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 40px);
+    padding: 40px 16px;
+    box-sizing: border-box;
+}
+
+.patient-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.patient-form input[type="text"],
+.patient-form input[type="date"],
+.patient-form input[type="tel"],
+.patient-form input[type="email"],
+.patient-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    border: 1px solid #e6eef6;
+    border-radius: 8px;
+    background: #fbfdff;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #0f172a;
+}
+
+/* actions */
+.patient-form .form-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.patient-form button {
+    padding: 10px 16px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.patient-form button:hover {
+    background: #1e40af;
+}
+
+.patient-form a {
+    color: #374151;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.patient-form a:hover {
+    text-decoration: underline;
+}
