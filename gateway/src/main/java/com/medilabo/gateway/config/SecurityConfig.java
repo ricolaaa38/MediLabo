@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .map(user -> org.springframework.security.core.userdetails.User
                         .withUsername(user.getEmail())
                         .password(user.getPassword())
-                        .authorities("USER") // You can customize authorities as needed
+                        .authorities(user.getRole().name()) // You can customize authorities as needed
                         .build())
                 .switchIfEmpty(Mono.empty());
     }

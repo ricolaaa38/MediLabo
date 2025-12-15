@@ -1,5 +1,6 @@
 package com.medilabo.ui.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,17 +51,21 @@ public class UIController {
     }
 
     @GetMapping("/patients/{id}")
-    public String patientDetail(@PathVariable String id, Model model) {
+    public String patientDetail(@PathVariable String id, Model model, HttpServletRequest request) {
         String url = UriComponentsBuilder.fromHttpUrl(patientUrl).path("/api/patients/").path(id).toUriString();
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Internal-Secret", internalSecret);
+
+        String userRole = request.getHeader("X-User-Role");
+
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<Map> resp = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
         Map<String, Object> patient = resp.getBody();
 
         model.addAttribute("patient", patient);
+        model.addAttribute("userRole", userRole);
         return "patient-details";
     }
 

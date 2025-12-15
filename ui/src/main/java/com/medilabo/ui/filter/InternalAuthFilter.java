@@ -37,6 +37,8 @@ public class InternalAuthFilter implements Filter {
 
         String header = req.getHeader("X-Internal-Secret");
         log.info("UI InternalAuthFilter: path={} X-Internal-Secret='{}' expected='{}'", path, header, internalSecret);
+        String role = req.getHeader("X-User-Role");
+        log.info("UI InternalAuthFilter: X-User-Role='{}'", role);
 
         if (internalSecret != null && internalSecret.equals(header)) {
             chain.doFilter(request, response);

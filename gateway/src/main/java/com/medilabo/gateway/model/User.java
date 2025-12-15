@@ -2,6 +2,7 @@ package com.medilabo.gateway.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -21,9 +22,13 @@ public class User {
 
     private String password;
 
-    public User(String id, String email, String password) {
+    @NotNull
+    private Role role;
+
+    public User(String id, String email, String password, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 }

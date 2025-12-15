@@ -37,6 +37,7 @@
     </label><br/><br/>
 
     <button type="submit">Enregistrer</button>
+    <button th:if="${userRole == 'PRATICIEN'}" type="button">Action</button>
     <a th:href="@{/ui/}">Retour à la liste</a>
 </form>
 </div>
