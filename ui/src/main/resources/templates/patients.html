@@ -11,6 +11,7 @@
 <table>
     <thead>
     <tr>
+        <th></th>
         <th>Prénom</th>
         <th>Nom</th>
         <th>Date de naissance</th>
@@ -19,8 +20,9 @@
     <tbody>
     <tr th:each="patient : ${patients}">
         <td>
-            <a th:href="@{/ui/patients/{id}(id=${patient['id']})}" th:text="${patient['firstName']}">Prénom</a>
+            <button class="patient-details-button" th:onclick="|location.href='@{/ui/patients/{id}(id=${patient['id']})}'|">Détails</button>
         </td>
+        <td th:text="${patient['firstName']}">Prénom</td>
         <td th:text="${patient['lastName']}">Nom</td>
         <td th:text="${patient['dateOfBirth']}">Date</td>
     </tr>

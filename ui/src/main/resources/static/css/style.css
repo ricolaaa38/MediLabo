@@ -30,6 +30,11 @@ tbody tr:nth-child(even) {
     background-color: #fbfcfd;
 }
 
+tbody tr td:first-child {
+    width: 100px;
+    padding: 5px;
+}
+
 tbody tr:hover {
     background-color: #eef6ff;
 }
@@ -119,8 +124,20 @@ textarea {
     cursor: pointer;
     font-weight: 600;
 }
+.patient-details-button {
+    background: #2563eb;
+    width: 100%;
+    height: auto;
+    padding: 5px;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    box-sizing: border-box;
+}
 
-.patient-form button:hover, .add-note-form button:hover {
+.patient-form button:hover, .add-note-form button:hover, .patient-details-button:hover {
     background: #1e40af;
 }
 
