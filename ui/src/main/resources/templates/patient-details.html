@@ -37,9 +37,32 @@
     </label><br/><br/>
 
     <button type="submit">Enregistrer</button>
-    <button th:if="${userRole == 'PRATICIEN'}" type="button">Action</button>
     <a th:href="@{/ui/}">Retour à la liste</a>
 </form>
+    <div th:if="${userRole == 'PRATICIEN'}" class="note-section">
+        <h3>Notes du patient</h3>
+
+        <p th:if="${notes != null}" th:text="'Nombre de notes : ' + ${notes.size()}">Nombre de notes : 0</p>
+
+        <div th:if="${notes == null or #lists.isEmpty(notes)}">
+            <em>Aucune note disponible.</em>
+        </div>
+
+        <ul th:if="${notes != null and !#lists.isEmpty(notes)}">
+            <li th:each="n : ${notes}">
+                <div class="note-item">
+                    <p th:text="${n.note}"></p>
+                </div>
+            </li>
+        </ul>
+        <form th:action="@{/ui/patients/{id}/notes(id=${patient['id']})}" method="post" class="add-note-form">
+            <input type="hidden" name="patientName" th:value="|${patient['firstName']} ${patient['lastName']}|"/>
+            <label>Nouvelle note :<br/>
+                <textarea name="note" rows="4" cols="50" required></textarea>
+            </label><br/>
+            <button type="submit">Enregistrer</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>

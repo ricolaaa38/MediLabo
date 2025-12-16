@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class UIController {
@@ -31,6 +29,9 @@ public class UIController {
 
     @Value("${patient.url:http://localhost:8080}")
     private String patientUrl;
+
+    @Value("${note.url:http://localhost:8083}")
+    private String noteUrl;
 
     @Value("${internal.secret}")
     private String internalSecret;
@@ -66,6 +67,29 @@ public class UIController {
 
         model.addAttribute("patient", patient);
         model.addAttribute("userRole", userRole);
+
+        if ("PRATICIEN".equals(userRole)) {
+            try {
+                String notesUrl = UriComponentsBuilder.fromHttpUrl(noteUrl)
+                        .path("/api/notes/")
+                        .path(id)
+                        .toUriString();
+
+                HttpHeaders notesHeaders = new HttpHeaders();
+                notesHeaders.set("X-Internal-Secret", internalSecret);
+                notesHeaders.set("X-User-Role", userRole);
+                HttpEntity<Void> notesEntity = new HttpEntity<>(notesHeaders);
+
+                ResponseEntity<List> notesResp = restTemplate.exchange(notesUrl, HttpMethod.GET, notesEntity, List.class);
+                List<Map<String, Object>> notes = notesResp.getBody();
+                model.addAttribute("notes", notes != null ? notes : Collections.emptyList());
+            } catch (Exception e) {
+                log.warn("Impossible de récupérer les notes pour patient {} : {}", id, e.getMessage());
+                model.addAttribute("notes", Collections.emptyList());
+            }
+        } else {
+            model.addAttribute("notes", Collections.emptyList());
+        }
         return "patient-details";
     }
 
@@ -97,6 +121,38 @@ public class UIController {
         log.info("UIController PUT patient -> id={} url={} secretSet={}", id, url, internalSecret != null);
 
         restTemplate.exchange(url, HttpMethod.PUT, entity, Map.class);
+
+        return "redirect:http://localhost:8081/ui/patients/" + id;
+    }
+
+    @PostMapping("/patients/{id}/notes")
+    public String addNote(@PathVariable String id,
+                          @RequestParam String note,
+                          @RequestParam(required = false) String patientName,
+                          HttpServletRequest request) {
+        String userRole = request.getHeader("X-User-Role");
+        if (!"PRATICIEN".equals(userRole)) {
+            return "redirect:/patients/" + id;
+        }
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("patientId", id);
+        payload.put("patientName", patientName != null ? patientName : "");
+        payload.put("note", note);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-Internal-Secret", internalSecret);
+        headers.set("X-User-Role", userRole);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);
+
+        try {
+            String target = UriComponentsBuilder.fromHttpUrl(noteUrl).path("/api/notes").toUriString();
+            restTemplate.postForEntity(target, entity, Map.class);
+        } catch (Exception e) {
+            log.warn("Échec POST note patient {} : {}", id, e.getMessage());
+        }
 
         return "redirect:http://localhost:8081/ui/patients/" + id;
     }

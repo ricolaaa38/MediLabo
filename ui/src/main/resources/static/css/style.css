@@ -34,9 +34,29 @@ tbody tr:hover {
     background-color: #eef6ff;
 }
 
-.patient-form {
+.form-container {
+    display: flex;
     width: 100%;
-    max-width: 720px;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 40px);
+    padding: 40px 16px;
+    box-sizing: border-box;
+    gap: 24px;
+}
+
+.patient-form {
+    width: 30%;
+    height: 80%;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    box-sizing: border-box;
+}
+.note-section {
+    width: 70%;
+    height: 80%;
     background: #ffffff;
     padding: 24px;
     border-radius: 10px;
@@ -44,13 +64,18 @@ tbody tr:hover {
     box-sizing: border-box;
 }
 
-.form-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: calc(100vh - 40px);
-    padding: 40px 16px;
+textarea {
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    margin: 10px;
+    border: 1px solid #e6eef6;
+    border-radius: 8px;
+    background: #fbfdff;
     box-sizing: border-box;
+    font-size: 14px;
+    color: #0f172a;
+    resize: none;
 }
 
 .patient-form label {
@@ -85,7 +110,7 @@ tbody tr:hover {
     margin-top: 8px;
 }
 
-.patient-form button {
+.patient-form button, .add-note-form button {
     padding: 10px 16px;
     background: #2563eb;
     color: #fff;
@@ -95,7 +120,7 @@ tbody tr:hover {
     font-weight: 600;
 }
 
-.patient-form button:hover {
+.patient-form button:hover, .add-note-form button:hover {
     background: #1e40af;
 }
 
