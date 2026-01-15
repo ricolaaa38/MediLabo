@@ -16,8 +16,6 @@ public class InternalAuthFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(InternalAuthFilter.class);
 
-    @Value("${internal.secret}")
-    private String internalSecret;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -35,15 +33,10 @@ public class InternalAuthFilter implements Filter {
             return;
         }
 
-        String header = req.getHeader("X-Internal-Secret");
-        log.info("UI InternalAuthFilter: path={} X-Internal-Secret='{}' expected='{}'", path, header, internalSecret);
         String role = req.getHeader("X-User-Role");
         log.info("UI InternalAuthFilter: X-User-Role='{}'", role);
 
-        if (internalSecret != null && internalSecret.equals(header)) {
-            chain.doFilter(request, response);
-        } else {
-            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access denied");
-        }
+        chain.doFilter(request, response);
+
     }
 }

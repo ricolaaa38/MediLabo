@@ -7,16 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.*;
 
 @Controller
+@RequestMapping("/ui")
 public class UIController {
 
     private static final Logger log = LoggerFactory.getLogger(UIController.class);
@@ -27,39 +25,62 @@ public class UIController {
         this.restTemplate = restTemplate;
     }
 
-    @Value("${patient.url:http://localhost:8080}")
+    @Value("${patient.url:http://localhost:8081}")
     private String patientUrl;
 
-    @Value("${note.url:http://localhost:8083}")
+    @Value("${note.url:http://localhost:8081}")
     private String noteUrl;
 
-    @Value("${internal.secret}")
-    private String internalSecret;
-
-    @GetMapping({"/", "patients"})
-    public String patients(Model model) {
+    @GetMapping({"", "/"})
+    public String patients(Model model, HttpServletRequest request) {
         String url = UriComponentsBuilder.fromHttpUrl(patientUrl).path("/api/patients").toUriString();
-
+        log.info("UI -> appel patient: url={}", url);
         HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Internal-Secret", internalSecret);
+
+        String auth = request.getHeader("Authorization");
+        if (auth != null) {
+            headers.set("Authorization", auth);
+        }
+
+        String userRole = request.getHeader("X-User-Role");
+        if (userRole != null) {
+            headers.set("X-User-Role", userRole);
+        }
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<List> resp = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        List<Map<String, Object>> patients = resp.getBody();
-
-        model.addAttribute("patients", patients);
+        try {
+            ResponseEntity<List> resp = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+            List<Map<String, Object>> patients = resp.getBody();
+            model.addAttribute("patients", patients);
+        } catch (org.springframework.web.client.HttpClientErrorException e) {
+            // 4xx du service patient -> message plus propre
+            log.warn("Erreur d'appel au service patient {} : {}", url, e.getStatusCode());
+            model.addAttribute("patients", java.util.Collections.emptyList());
+            model.addAttribute("errorMessage", "Impossible de récupérer la liste des patients (" + e.getStatusCode() + ").");
+        }
         return "patients";
     }
 
-    @GetMapping("/patients/{id}")
+    @GetMapping("/patients")
+    public String patientsList(Model model, HttpServletRequest request) {
+        return patients(model, request);
+    }
+
+    @GetMapping({"/patients/{id}"})
     public String patientDetail(@PathVariable String id, Model model, HttpServletRequest request) {
         String url = UriComponentsBuilder.fromHttpUrl(patientUrl).path("/api/patients/").path(id).toUriString();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Internal-Secret", internalSecret);
+
+        String auth = request.getHeader("Authorization");
+        if (auth != null) {
+            headers.set("Authorization", auth);
+        }
 
         String userRole = request.getHeader("X-User-Role");
-
+        if (userRole != null) {
+            headers.set("X-User-Role", userRole);
+        }
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ResponseEntity<Map> resp = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
@@ -76,8 +97,11 @@ public class UIController {
                         .toUriString();
 
                 HttpHeaders notesHeaders = new HttpHeaders();
-                notesHeaders.set("X-Internal-Secret", internalSecret);
-                notesHeaders.set("X-User-Role", userRole);
+
+                String notesAuth = request.getHeader("Authorization");
+                if (notesAuth != null) {
+                    notesHeaders.set("Authorization", notesAuth);
+                }
                 HttpEntity<Void> notesEntity = new HttpEntity<>(notesHeaders);
 
                 ResponseEntity<List> notesResp = restTemplate.exchange(notesUrl, HttpMethod.GET, notesEntity, List.class);
@@ -94,7 +118,7 @@ public class UIController {
     }
 
     @PostMapping("/patients/{id}")
-    public String updatePatient(@PathVariable String id, @RequestParam Map<String, String> params) {
+    public String updatePatient(@PathVariable String id, @RequestParam Map<String, String> params, HttpServletRequest request) {
         String url = UriComponentsBuilder.fromHttpUrl(patientUrl).path("/api/patients/").path(id).toUriString();
 
         Map<String, Object> payload = new HashMap<>();
@@ -111,14 +135,18 @@ public class UIController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        if (internalSecret == null || internalSecret.isBlank()) {
-            log.error("internal.secret absent dans l'application UI — la requête vers patient ne sera pas autorisée");
+        String auth = request.getHeader("Authorization");
+        if (auth != null) {
+            headers.set("Authorization", auth);
         }
-        headers.set("X-Internal-Secret", internalSecret);
 
+        String userRole = request.getHeader("X-User-Role");
+        if (userRole != null) {
+            headers.set("X-User-Role", userRole);
+        }
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);
 
-        log.info("UIController PUT patient -> id={} url={} secretSet={}", id, url, internalSecret != null);
+        log.info("UIController PUT patient -> id={} url={} roleForwarded={}", id, url, userRole != null);
 
         restTemplate.exchange(url, HttpMethod.PUT, entity, Map.class);
 
@@ -142,8 +170,15 @@ public class UIController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Internal-Secret", internalSecret);
-        headers.set("X-User-Role", userRole);
+
+        String auth = request.getHeader("Authorization");
+        if (auth != null) {
+            headers.set("Authorization", auth);
+        }
+
+       if  (userRole != null) {
+            headers.set("X-User-Role", userRole);
+       }
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);
 

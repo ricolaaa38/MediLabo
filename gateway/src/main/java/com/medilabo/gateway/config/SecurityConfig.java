@@ -35,7 +35,17 @@ public class SecurityConfig {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/ui/**", "/actuator/**", "/actuator/health", "/actuator/info").permitAll()
+//                        .pathMatchers("/ui/**",
+//                                "/api/patients/**",
+//                                "/api/notes/**",
+//                                "/actuator/**",
+//                                "/actuator/health",
+//                                "/actuator/info")
+//                        .permitAll()
+                                .pathMatchers(
+                                        "/actuator/health",
+                                        "/actuator/info"
+                                ).permitAll()
                         .anyExchange().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
