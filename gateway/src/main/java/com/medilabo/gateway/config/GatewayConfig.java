@@ -35,8 +35,7 @@ public class GatewayConfig {
                     })
                     .defaultIfEmpty(exchange.mutate().request(requestBuilder.build()).build())
                     .flatMap(e -> {
-                        // log à cet endroit
-                        System.out.println("GW -> path=" + e.getRequest().getURI()
+                        System.out.println("path=" + e.getRequest().getURI()
                                 + " X-Internal-Secret=" + e.getRequest().getHeaders().getFirst("X-Internal-Secret")
                                 + " X-User-Role=" + e.getRequest().getHeaders().getFirst("X-User-Role"));
                         return chain.filter(e);

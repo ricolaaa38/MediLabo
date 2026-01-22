@@ -39,7 +39,8 @@
     <button type="submit">Enregistrer</button>
     <a th:href="@{/ui/}">Retour à la liste</a>
 </form>
-    <div th:if="${userRole == 'PRATICIEN'}" class="note-section">
+    <div th:if="${userRole == 'PRATICIEN'}" class="notes-reports-container">
+    <div class="note-section">
         <h3>Notes du patient</h3>
 
         <p th:if="${notes != null}" th:text="'Nombre de notes : ' + ${notes.size()}">Nombre de notes : 0</p>
@@ -62,6 +63,20 @@
             </label><br/>
             <button type="submit">Enregistrer</button>
         </form>
+
+    </div>
+    <div class="rapport-section">
+    <div th:if="${diabetesReport != null}" class="evaluation-report">
+        <h3>Rapport de risque du diabète</h3>
+        <p><strong>Risque :</strong> <span th:text="${diabetesReport['risk']}">-</span></p>
+        <p><strong>Nombre de déclencheurs :</strong> <span th:text="${diabetesReport['triggersCount']}">0</span></p>
+        <p><strong>Âge :</strong> <span th:text="${diabetesReport['age'] != null ? diabetesReport['age'] : 'N/A'}">N/A</span> ans</p>
+    </div>
+
+    <div th:if="${diabetesReport == null}">
+        <em>Rapport diabète non disponible.</em>
+    </div>
+        </div>
     </div>
 </div>
 </body>

@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .map(user -> org.springframework.security.core.userdetails.User
                         .withUsername(user.getEmail())
                         .password(user.getPassword())
-                        .authorities(user.getRole().name()) // You can customize authorities as needed
+                        .authorities(user.getRole().name())
                         .build())
                 .switchIfEmpty(Mono.empty());
     }
@@ -35,13 +35,6 @@ public class SecurityConfig {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-//                        .pathMatchers("/ui/**",
-//                                "/api/patients/**",
-//                                "/api/notes/**",
-//                                "/actuator/**",
-//                                "/actuator/health",
-//                                "/actuator/info")
-//                        .permitAll()
                                 .pathMatchers(
                                         "/actuator/health",
                                         "/actuator/info"

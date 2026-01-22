@@ -1,4 +1,4 @@
-package com.medilabo.notes.filter;
+package com.medilabo.evaluation.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,10 +28,10 @@ public class InternalAuthFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
+
         String header = req.getHeader("X-Internal-Secret");
-        log.info("UI InternalAuthFilter: path={} X-Internal-Secret='{}' expected='{}'", path, header, internalSecret);
         String role = req.getHeader("X-User-Role");
-        log.info("UI InternalAuthFilter: X-User-Role='{}'", role);
+        log.info("Evaluation InternalAuthFilter: path={} X-Internal-Secret='{}' expected='{}' X-User-Role='{}'", path, header, internalSecret, role);
 
         if (internalSecret != null && internalSecret.equals(header) && "PRATICIEN".equals(role)) {
             chain.doFilter(request, response);

@@ -31,6 +31,9 @@ public class UIController {
     @Value("${note.url:http://localhost:8081}")
     private String noteUrl;
 
+    @Value("${evaluation.url:http://localhost:8081}")
+    private String evaluationUrl;
+
     @GetMapping({"", "/"})
     public String patients(Model model, HttpServletRequest request) {
         String url = UriComponentsBuilder.fromHttpUrl(patientUrl).path("/api/patients").toUriString();
@@ -111,8 +114,31 @@ public class UIController {
                 log.warn("Impossible de récupérer les notes pour patient {} : {}", id, e.getMessage());
                 model.addAttribute("notes", Collections.emptyList());
             }
+
+            try {
+                String evalUrl = UriComponentsBuilder.fromHttpUrl(evaluationUrl)
+                        .path("/api/evaluations/")
+                        .path(id)
+                        .toUriString();
+
+                HttpHeaders evalHeaders = new HttpHeaders();
+                String evalAuth = request.getHeader("Authorization");
+                if (evalAuth != null) evalHeaders.set("Authorization", evalAuth);
+                evalHeaders.set("X-User-Role", userRole);
+
+                HttpEntity<Void> evalEntity = new HttpEntity<>(evalHeaders);
+
+                ResponseEntity<Map> evalResp = restTemplate.exchange(evalUrl, HttpMethod.GET, evalEntity, Map.class);
+                Map<String, Object> diabetesReport = evalResp.getBody();
+                model.addAttribute("diabetesReport", diabetesReport);
+                log.info("Récupération rapport diabète patient {} -> {}", id, diabetesReport);
+            } catch (Exception e) {
+                log.warn("Impossible de récupérer le rapport diabète pour patient {} : {}", id, e.getMessage());
+                model.addAttribute("diabetesReport", null);
+            }
         } else {
             model.addAttribute("notes", Collections.emptyList());
+            model.addAttribute("diabetesReport", null);
         }
         return "patient-details";
     }
