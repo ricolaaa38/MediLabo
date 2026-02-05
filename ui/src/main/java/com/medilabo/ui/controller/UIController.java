@@ -25,18 +25,13 @@ public class UIController {
         this.restTemplate = restTemplate;
     }
 
-    @Value("${patient.url:http://localhost:8081}")
-    private String patientUrl;
+    @Value("${gateway.url}")
+    private String getwayUrl;
 
-    @Value("${note.url:http://localhost:8081}")
-    private String noteUrl;
-
-    @Value("${evaluation.url:http://localhost:8081}")
-    private String evaluationUrl;
 
     @GetMapping({"", "/"})
     public String patients(Model model, HttpServletRequest request) {
-        String url = UriComponentsBuilder.fromHttpUrl(patientUrl).path("/api/patients").toUriString();
+        String url = UriComponentsBuilder.fromHttpUrl(getwayUrl).path("/api/patients").toUriString();
         log.info("UI -> appel patient: url={}", url);
         HttpHeaders headers = new HttpHeaders();
 
@@ -71,7 +66,7 @@ public class UIController {
 
     @GetMapping({"/patients/{id}"})
     public String patientDetail(@PathVariable String id, Model model, HttpServletRequest request) {
-        String url = UriComponentsBuilder.fromHttpUrl(patientUrl).path("/api/patients/").path(id).toUriString();
+        String url = UriComponentsBuilder.fromHttpUrl(getwayUrl).path("/api/patients/").path(id).toUriString();
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -94,7 +89,7 @@ public class UIController {
 
         if ("PRATICIEN".equals(userRole)) {
             try {
-                String notesUrl = UriComponentsBuilder.fromHttpUrl(noteUrl)
+                String notesUrl = UriComponentsBuilder.fromHttpUrl(getwayUrl)
                         .path("/api/notes/")
                         .path(id)
                         .toUriString();
@@ -116,7 +111,7 @@ public class UIController {
             }
 
             try {
-                String evalUrl = UriComponentsBuilder.fromHttpUrl(evaluationUrl)
+                String evalUrl = UriComponentsBuilder.fromHttpUrl(getwayUrl)
                         .path("/api/evaluations/")
                         .path(id)
                         .toUriString();
@@ -145,7 +140,7 @@ public class UIController {
 
     @PostMapping("/patients/{id}")
     public String updatePatient(@PathVariable String id, @RequestParam Map<String, String> params, HttpServletRequest request) {
-        String url = UriComponentsBuilder.fromHttpUrl(patientUrl).path("/api/patients/").path(id).toUriString();
+        String url = UriComponentsBuilder.fromHttpUrl(getwayUrl).path("/api/patients/").path(id).toUriString();
 
         Map<String, Object> payload = new HashMap<>();
 
@@ -209,7 +204,7 @@ public class UIController {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);
 
         try {
-            String target = UriComponentsBuilder.fromHttpUrl(noteUrl).path("/api/notes").toUriString();
+            String target = UriComponentsBuilder.fromHttpUrl(getwayUrl).path("/api/notes").toUriString();
             restTemplate.postForEntity(target, entity, Map.class);
         } catch (Exception e) {
             log.warn("Échec POST note patient {} : {}", id, e.getMessage());

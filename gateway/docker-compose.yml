@@ -1,0 +1,88 @@
+  services:
+    gateway:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      ports:
+        - "8081:8081"
+      env_file:
+        - .env
+      environment:
+        - SPRING_DATA_MONGODB_HOST=${SPRING_DATA_MONGODB_HOST}
+        - SPRING_DATA_MONGODB_PORT=${SPRING_DATA_MONGODB_PORT}
+        - SPRING_DATA_MONGODB_DATABASE=${GATEWAY_DB}
+        - INTERNAL_SECRET=${INTERNAL_SECRET}
+        - PATIENT_URL=${PATIENT_URL}
+        - NOTE_URL=${NOTE_URL}
+        - EVALUATION_URL=${EVALUATION_URL}
+        - UI_URL=${UI_URL}
+      depends_on:
+        - mongo
+
+    patient:
+      build:
+        context: ../patient
+        dockerfile: Dockerfile
+      ports:
+        - "8080:8080"
+      env_file:
+        - .env
+      environment:
+        - SPRING_DATA_MONGODB_HOST=${SPRING_DATA_MONGODB_HOST}
+        - SPRING_DATA_MONGODB_PORT=${SPRING_DATA_MONGODB_PORT}
+        - SPRING_DATA_MONGODB_DATABASE=${PATIENT_DB}
+        - INTERNAL_SECRET=${INTERNAL_SECRET}
+      depends_on:
+        - mongo
+
+    notes:
+      build:
+        context: ../notes
+        dockerfile: Dockerfile
+      ports:
+        - "8083:8083"
+      env_file:
+        - .env
+      environment:
+        - SPRING_DATA_MONGODB_HOST=${SPRING_DATA_MONGODB_HOST}
+        - SPRING_DATA_MONGODB_PORT=${SPRING_DATA_MONGODB_PORT}
+        - SPRING_DATA_MONGODB_DATABASE=${NOTES_DB}
+        - INTERNAL_SECRET=${INTERNAL_SECRET}
+      depends_on:
+        - mongo
+
+    evaluation:
+      build:
+        context: ../evaluation
+        dockerfile: Dockerfile
+      ports:
+        - "8084:8084"
+      env_file:
+        - .env
+      environment:
+        - GATEWAY_URL=${GATEWAY_URL}
+        - INTERNAL_SECRET=${INTERNAL_SECRET}
+      depends_on:
+        - notes
+        - patient
+
+    ui:
+      build:
+        context: ../ui
+        dockerfile: Dockerfile
+      ports:
+        - "8082:8082"
+      env_file:
+        - .env
+      environment:
+        - GATEWAY_URL=${GATEWAY_URL}
+
+    mongo:
+      image: mongo:6.0
+      ports:
+        - "27017:27017"
+      volumes:
+        - mongo-data:/data/db
+
+  volumes:
+    mongo-data:
