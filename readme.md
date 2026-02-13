@@ -1,69 +1,120 @@
-🌱 Green Code – Optimisations environnementales du projet
-L’objectif du Green Code est de réduire l’empreinte environnementale de l’application en limitant la consommation CPU, mémoire, réseau et stockage. Un code plus “vert” est également plus performant, plus scalable et moins coûteux à exécuter.
+# 🌿 Green Code – Optimisations Environnementales du Projet MediLabo
 
-🎯 Objectifs du Green Code
-Minimiser les ressources utilisées par chaque microservice
+Ce document présente les objectifs du *Green Code*, les méthodes pour identifier les zones de consommation excessive dans une application, ainsi qu’une liste de recommandations concrètes pour améliorer la sobriété numérique du projet MediLabo.
 
-Réduire les traitements inutiles
+---
 
-Éviter les allocations mémoire superflues
+## 🎯 Objectifs du Green Code
 
-Limiter les appels réseau redondants
+Le *Green Code* vise à réduire l’empreinte environnementale d’une application en optimisant :
 
-Optimiser les accès aux bases de données
+- la consommation CPU  
+- la consommation mémoire  
+- les accès réseau  
+- les opérations de stockage  
+- la taille des données échangées  
+- la duplication de traitements  
 
-Améliorer la durée de vie et la sobriété de l’infrastructure
+Un code plus “vert” est également :
 
-🔍 Comment identifier les zones de consommation excessive ?
-Plusieurs indicateurs permettent de repérer les parties du code qui consomment inutilement de la mémoire ou du CPU :
+- plus rapide  
+- plus scalable  
+- plus économique en infrastructure  
+- plus simple à maintenir  
 
-Collections non maîtrisées : listes ou maps qui grossissent sans limite.
+---
 
-Objets créés en boucle : instanciations répétées dans des traitements fréquents.
+## 🔍 Identifier les zones de consommation excessive
 
-Chargement excessif de données : récupération de données complètes alors qu’une partie suffit.
+Plusieurs signaux permettent de repérer les parties du code qui consomment inutilement des ressources :
 
-Absence de pagination : chargement de centaines d’éléments en une seule fois.
+### 🧠 1. Collections non maîtrisées
+- Listes ou maps qui grossissent sans limite  
+- Absence de pagination  
+- Données chargées en masse alors qu’une partie suffit  
 
-Logs trop verbeux : logs DEBUG en production ou logs dans des boucles.
+### 🔁 2. Création répétée d’objets
+- Instanciation d’objets lourds dans des boucles  
+- Création répétée de clients HTTP  
+- Conversions inutiles  
 
-Appels réseau redondants : absence de cache ou de mutualisation.
+### 📦 3. Chargement excessif de données
+- Appels `findAll()` non filtrés  
+- Récupération de documents complets au lieu de champs ciblés  
+- Absence de projection ou de DTO minimalistes  
 
-Structures de données inadaptées : utilisation de types lourds pour des besoins simples.
+### 🧵 4. Absence de streaming
+- Lecture de fichiers entiers en mémoire  
+- Manipulation de grandes listes au lieu de flux  
 
-♻️ Recommandations Green pour ce projet
-🔧 Backend (microservices)
-Utiliser un RestTemplate ou WebClient singleton (éviter les instanciations répétées).
+### 🧰 5. Structures de données inadaptées
+- Utilisation de structures lourdes pour des besoins simples  
+- Absence de caches légers  
 
-Ajouter une pagination sur les endpoints qui retournent des listes (patients, notes).
+### 📝 6. Logs trop verbeux
+- Logs DEBUG en production  
+- Logs dans des boucles  
+- Logs de gros objets  
 
-Éviter de charger toutes les notes d’un patient si seules certaines informations sont nécessaires.
+### 🌐 7. Appels réseau redondants
+- Absence de mutualisation  
+- Pas de cache  
+- Pas de timeout  
 
-Réduire les conversions et normalisations répétées (ex : normalisation des accents).
+---
 
-Mettre en place un cache léger pour les données fréquemment consultées.
+## ♻️ Recommandations Green pour MediLabo
 
-Utiliser des DTO minimalistes pour réduire la taille des réponses JSON.
+### 🔧 Backend (microservices)
 
-Limiter les logs au niveau INFO en production.
+- Utiliser un **RestTemplate/WebClient singleton** (éviter les instanciations répétées).  
+- Ajouter une **pagination** sur les endpoints retournant des listes (patients, notes).  
+- Réduire les données chargées :  
+  - éviter `findAll()` quand un filtre suffit  
+  - utiliser des DTO minimalistes  
+- Mettre en place un **cache léger** pour les données fréquemment consultées.  
+- Éviter les normalisations répétées (ex : accents) en les centralisant.  
+- Limiter les logs au niveau INFO en production.  
+- Préférer des structures immuables pour réduire les copies d’objets.  
 
-🗄️ Base de données
-Ajouter des index sur les champs fréquemment utilisés (patientId dans notes).
+---
 
-Éviter les requêtes non filtrées (findAll()) dans les services critiques.
+### 🗄️ Base de données (MongoDB)
 
-Utiliser des projections ou des champs ciblés pour réduire la taille des documents.
+- Ajouter des **index** sur les champs utilisés dans les requêtes (`patientId` dans notes).  
+- Utiliser des projections pour réduire la taille des documents retournés.  
+- Éviter les requêtes non filtrées.  
+- Nettoyer les données obsolètes pour réduire la taille des collections.  
 
-🧪 Tests
-Utiliser des tests unitaires Mockito (pas de contexte Spring Boot inutile).
+---
 
-Éviter les bases embarquées si non nécessaires (H2, MongoMemoryServer).
+### 🧪 Tests
 
-Exécuter les tests en parallèle si possible.
+- Utiliser **Mockito** pour les tests unitaires (pas de contexte Spring Boot inutile).  
+- Éviter les bases embarquées si non nécessaires (H2, MongoMemoryServer).  
+- Exécuter les tests en parallèle si possible.  
+- Réduire les données mockées au strict minimum.  
 
-🏗️ Architecture
-Mutualiser les configurations communes entre microservices.
+---
 
-Réduire la duplication de code (ex : normalisation, DTO).
+### 🏗️ Architecture
 
-Préférer des microservices légers, stateless, facilement scalables.
+- Mutualiser les configurations communes entre microservices.  
+- Réduire la duplication de code (normalisation, DTO, utilitaires).  
+- Préférer des microservices **stateless** pour faciliter la scalabilité.  
+- Documenter les flux pour éviter les appels réseau inutiles.  
+
+---
+
+## 📘 Conclusion
+
+L’adoption du *Green Code* dans MediLabo permet :
+
+- une réduction de l’empreinte environnementale  
+- une amélioration des performances  
+- une diminution des coûts d’infrastructure  
+- une meilleure maintenabilité du projet  
+
+Ces recommandations peuvent être intégrées progressivement, sans refonte majeure, pour rendre l’application plus durable et plus efficace.
+
+---
