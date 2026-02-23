@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Authentification filter for internal endpoints.
+ * It checks for the presence of a specific header and role.
+ */
 @Component
 public class InternalAuthFilter implements Filter {
 

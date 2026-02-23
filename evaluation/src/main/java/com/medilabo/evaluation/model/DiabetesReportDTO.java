@@ -2,6 +2,9 @@ package com.medilabo.evaluation.model;
 
 import lombok.Data;
 
+/**
+ * Data Transfer Object for diabetes report.
+ */
 @Data
 public class DiabetesReportDTO {
     private Integer age;

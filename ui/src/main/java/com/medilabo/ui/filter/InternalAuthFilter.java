@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * InternalAuthFilter is a servlet filter that intercepts incoming HTTP requests to the application.
+ * It logs the user's role from the "X-User-Role" header for tracking and debugging purposes.
+ * The filter allows requests to static resources and actuator endpoints (like "/actuator", "/css", "/js", etc.) to pass through without logging.
+ * For all other paths, it logs the user's role and continues the filter chain without performing authentication or authorization checks.
+ */
 
 @Component
 public class InternalAuthFilter implements Filter {

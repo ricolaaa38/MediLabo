@@ -13,6 +13,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.*;
 
+/**
+ * UIController is a Spring MVC controller that handles HTTP requests for the user interface of the application.
+ * It provides endpoints for displaying a list of patients, showing details of a specific patient, updating patient information, and adding notes for a patient.
+ * The controller interacts with backend services through RESTful API calls using RestTemplate.
+ */
 @Controller
 @RequestMapping("/ui")
 public class UIController {
@@ -65,8 +70,8 @@ public class UIController {
     }
 
     @GetMapping({"/patients/{id}"})
-    public String patientDetail(@PathVariable String id, Model model, HttpServletRequest request) {
-        String url = UriComponentsBuilder.fromHttpUrl(getwayUrl).path("/api/patients/").path(id).toUriString();
+    public String patientDetail(@PathVariable int id, Model model, HttpServletRequest request) {
+        String url = UriComponentsBuilder.fromHttpUrl(getwayUrl).path("/api/patients/").path(String.valueOf(id)).toUriString();
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -91,7 +96,7 @@ public class UIController {
             try {
                 String notesUrl = UriComponentsBuilder.fromHttpUrl(getwayUrl)
                         .path("/api/notes/")
-                        .path(id)
+                        .path(String.valueOf(id))
                         .toUriString();
 
                 HttpHeaders notesHeaders = new HttpHeaders();
@@ -113,7 +118,7 @@ public class UIController {
             try {
                 String evalUrl = UriComponentsBuilder.fromHttpUrl(getwayUrl)
                         .path("/api/evaluations/")
-                        .path(id)
+                        .path(String.valueOf(id))
                         .toUriString();
 
                 HttpHeaders evalHeaders = new HttpHeaders();
@@ -139,8 +144,8 @@ public class UIController {
     }
 
     @PostMapping("/patients/{id}")
-    public String updatePatient(@PathVariable String id, @RequestParam Map<String, String> params, HttpServletRequest request) {
-        String url = UriComponentsBuilder.fromHttpUrl(getwayUrl).path("/api/patients/").path(id).toUriString();
+    public String updatePatient(@PathVariable int id, @RequestParam Map<String, String> params, HttpServletRequest request) {
+        String url = UriComponentsBuilder.fromHttpUrl(getwayUrl).path("/api/patients/").path(String.valueOf(id)).toUriString();
 
         Map<String, Object> payload = new HashMap<>();
 
@@ -175,7 +180,7 @@ public class UIController {
     }
 
     @PostMapping("/patients/{id}/notes")
-    public String addNote(@PathVariable String id,
+    public String addNote(@PathVariable int id,
                           @RequestParam String note,
                           @RequestParam(required = false) String patientName,
                           HttpServletRequest request) {

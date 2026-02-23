@@ -1,5 +1,8 @@
 package com.medilabo.evaluation.model;
 
+/**
+ * Enum representing the diabetes risk levels.
+ */
 public enum DiabetesRisk {
     NONE("None"),
     BORDERLINE("Borderline"),

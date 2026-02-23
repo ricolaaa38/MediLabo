@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * PatientInformationController is a REST controller that handles HTTP requests related to patient information.
+ * It provides endpoints for retrieving all patients, retrieving a specific patient by ID, adding a new patient, and updating an existing patient.
+ */
 @RestController
 @RequestMapping("/api/patients")
 public class PatientInformationController {
@@ -24,7 +28,7 @@ public class PatientInformationController {
     }
 
     @GetMapping("/{id}")
-    public PatientInformations getPatientInformations(@PathVariable String id) {
+    public PatientInformations getPatientInformations(@PathVariable int id) {
         return patientInformationService.findById(id);
     }
 
@@ -35,7 +39,7 @@ public class PatientInformationController {
     }
 
     @PutMapping("/{id}")
-    public PatientInformations updatePatient(@PathVariable String id, @Valid @RequestBody PatientInformations patientInformations) {
+    public PatientInformations updatePatient(@PathVariable int id, @Valid @RequestBody PatientInformations patientInformations) {
         return patientInformationService.update(id, patientInformations);
     }
 }

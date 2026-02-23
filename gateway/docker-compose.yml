@@ -28,12 +28,14 @@
       env_file:
         - .env
       environment:
-        - SPRING_DATA_MONGODB_HOST=${SPRING_DATA_MONGODB_HOST}
-        - SPRING_DATA_MONGODB_PORT=${SPRING_DATA_MONGODB_PORT}
-        - SPRING_DATA_MONGODB_DATABASE=${PATIENT_DB}
+        - SPRING_DATA_POSTGRES_HOST=patient-db
+        - SPRING_DATA_POSTGRES_PORT=5432
+        - SPRING_DATA_POSTGRES_DATABASE=${POSTGRES_DB}
+        - SPRING_DATA_POSTGRES_USERNAME=${POSTGRES_USER}
+        - SPRING_DATA_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         - INTERNAL_SECRET=${INTERNAL_SECRET}
       depends_on:
-        - mongo
+        - patient-db
 
     notes:
       build:
@@ -84,5 +86,18 @@
       volumes:
         - mongo-data:/data/db
 
+    patient-db:
+      image: postgres:16.4
+      restart: always
+      env_file:
+        - .env
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+        - /etc/timezone:/etc/timezone:ro
+        - /etc/localtime:/etc/localtime:ro
+
   volumes:
     mongo-data:
+    postgres_data:

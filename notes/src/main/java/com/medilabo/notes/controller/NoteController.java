@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing patient notes. Provides endpoints to create, read, update, and delete patient notes.
+ * The controller interacts with the NoteService to perform business logic and data access operations.
+ */
 @RestController
 @RequestMapping("/api/notes")
 public class NoteController {

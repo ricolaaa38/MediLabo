@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller for handling diabetes evaluation requests.
+ */
 @RestController
 @RequestMapping("/api/evaluations")
 public class EvaluationController {

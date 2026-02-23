@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * InternalAuthFilter is a servlet filter that checks for a specific header ("X-Internal-Secret") in incoming HTTP requests to authenticate internal requests.
+ * If the header value matches the expected secret, the request is allowed to proceed; otherwise, an unauthorized error is returned.
+ * The filter bypasses authentication for requests to the "/actuator" endpoint.
+ */
 @Component
 public class InternalAuthFilter implements Filter {
 

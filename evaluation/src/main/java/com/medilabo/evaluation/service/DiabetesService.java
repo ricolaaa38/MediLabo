@@ -20,6 +20,9 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 
+/**
+ * Service for evaluating diabetes risk based on patient data and notes.
+ */
 @Service
 public class DiabetesService {
 

@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service class for managing patient notes. Provides methods to find, create, update, and delete patient notes.
+ * The service interacts with the NoteRepository to perform data access operations on the MongoDB database.
+ */
 @Service
 public class NoteService {
 

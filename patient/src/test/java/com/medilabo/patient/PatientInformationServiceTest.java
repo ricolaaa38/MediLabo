@@ -34,7 +34,7 @@ public class PatientInformationServiceTest {
     @Test
     void findAll_shouldReturnList() {
         PatientInformations p = new PatientInformations();
-        p.setId("1");
+        p.setId(1);
         p.setFirstName("John");
 
         when(repository.findAll()).thenReturn(List.of(p));
@@ -48,21 +48,21 @@ public class PatientInformationServiceTest {
     @Test
     void findById_shouldReturnPatient() {
         PatientInformations p = new PatientInformations();
-        p.setId("1");
+        p.setId(1);
         p.setFirstName("Alice");
 
-        when(repository.findById("1")).thenReturn(Optional.of(p));
+        when(repository.findById(1)).thenReturn(Optional.of(p));
 
-        PatientInformations result = service.findById("1");
+        PatientInformations result = service.findById(1);
 
         assertEquals("Alice", result.getFirstName());
     }
 
     @Test
     void findById_shouldThrowNotFound() {
-        when(repository.findById("99")).thenReturn(Optional.empty());
+        when(repository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> service.findById("99"));
+        assertThrows(ResponseStatusException.class, () -> service.findById(99));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class PatientInformationServiceTest {
     @Test
     void update_shouldModifyAndSavePatient() {
         PatientInformations existing = new PatientInformations();
-        existing.setId("1");
+        existing.setId(1);
         existing.setFirstName("Old");
         existing.setLastName("Name");
         existing.setDateOfBirth(LocalDate.of(1990, 1, 1));
@@ -95,10 +95,10 @@ public class PatientInformationServiceTest {
         updated.setPostalAddress("Paris");
         updated.setPhoneNumber("0102030405");
 
-        when(repository.findById("1")).thenReturn(Optional.of(existing));
+        when(repository.findById(1)).thenReturn(Optional.of(existing));
         when(repository.save(any(PatientInformations.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        PatientInformations result = service.update("1", updated);
+        PatientInformations result = service.update(1, updated);
 
         assertEquals("New", result.getFirstName());
         assertEquals("F", result.getGender());
@@ -108,8 +108,8 @@ public class PatientInformationServiceTest {
 
     @Test
     void update_shouldThrowNotFound() {
-        when(repository.findById("99")).thenReturn(Optional.empty());
+        when(repository.findById(99)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> service.update("99", new PatientInformations()));
+        assertThrows(ResponseStatusException.class, () -> service.update(99, new PatientInformations()));
     }
 }

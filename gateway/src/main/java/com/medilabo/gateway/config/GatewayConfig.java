@@ -8,6 +8,11 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import reactor.core.publisher.Mono;
 
+/**
+ * GatewayConfig is a Spring configuration class that defines a global filter for the API Gateway.
+ * The filter adds an "X-Internal-Secret" header to all outgoing requests, which can be used for internal authentication between services.
+ * Additionally, if the user is authenticated, it adds an "X-User-Role" header containing the user's role.
+ */
 @Configuration
 public class GatewayConfig {
 

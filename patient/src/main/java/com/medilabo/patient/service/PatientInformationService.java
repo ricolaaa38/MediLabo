@@ -9,6 +9,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+/**
+ * PatientInformationService is a service class that provides business logic for managing patient information.
+ * It interacts with the PatientInformationRepository to perform CRUD operations on patient data.
+ */
 @Service
 public class PatientInformationService {
 
@@ -23,7 +27,7 @@ public class PatientInformationService {
         return patientInformationRepository.findAll();
     }
 
-    public PatientInformations findById(String id) {
+    public PatientInformations findById(int id) {
         return patientInformationRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient non trouvé !"));
     }
 
@@ -31,7 +35,7 @@ public class PatientInformationService {
         return patientInformationRepository.save(patientInformations);
     }
 
-    public PatientInformations update(String id, PatientInformations updatedPatientInformations) {
+    public PatientInformations update(int id, PatientInformations updatedPatientInformations) {
         PatientInformations existingPatientInformations = patientInformationRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient non trouvé !"));
 

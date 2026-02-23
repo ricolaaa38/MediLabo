@@ -11,6 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
+/**
+ * SecurityConfig is a Spring configuration class that sets up security for the API Gateway.
+ * It defines a password encoder, a reactive user details service that retrieves user information from the database,
+ * and a security filter chain that configures HTTP security settings, such as disabling CSRF and allowing unauthenticated access to certain endpoints.
+ */
 @Configuration
 public class SecurityConfig {
 

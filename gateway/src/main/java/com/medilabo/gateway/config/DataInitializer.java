@@ -9,6 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 
+/**
+ * DataInitializer is a Spring configuration class that initializes the database with default user accounts for testing purposes.
+ * It creates two users: one with the role of PRATICIEN and another with the role of ORGANISATEUR, if they do not already exist.
+ */
 @Configuration
 public class DataInitializer {
 

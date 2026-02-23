@@ -1,19 +1,23 @@
 package com.medilabo.patient.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
-@Document(collection = "patients")
+/**
+ * PatientInformations is a JPA entity that represents the information of a patient in the database.
+ */
+@Entity
+@Table(name = "patient")
 @Data
 public class PatientInformations {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @NotBlank
     private String firstName;

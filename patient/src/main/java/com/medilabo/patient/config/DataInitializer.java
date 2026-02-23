@@ -11,6 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * DataInitializer is a Spring configuration class that initializes the database with default patient information for testing purposes.
+ * It creates four patients with different ages and genders, if the collection is empty.
+ * If the collection already contains documents, it logs the count and skips initialization.
+ */
 @Configuration
 public class DataInitializer {
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
@@ -25,7 +30,7 @@ public class DataInitializer {
             }
 
             PatientInformations p1 = new PatientInformations();
-            p1.setId("1");
+
             p1.setFirstName("TestNone");
             p1.setLastName("Test");
             p1.setDateOfBirth(LocalDate.parse("1966-12-31"));
@@ -34,7 +39,7 @@ public class DataInitializer {
             p1.setPhoneNumber("100-222-3333");
 
             PatientInformations p2 = new PatientInformations();
-            p2.setId("2");
+
             p2.setFirstName("TestBorderline");
             p2.setLastName("Test");
             p2.setDateOfBirth(LocalDate.parse("1945-06-24"));
@@ -43,7 +48,7 @@ public class DataInitializer {
             p2.setPhoneNumber("200-333-4444");
 
             PatientInformations p3 = new PatientInformations();
-            p3.setId("3");
+
             p3.setFirstName("TestInDanger");
             p3.setLastName("Test");
             p3.setDateOfBirth(LocalDate.parse("2004-06-18"));
@@ -53,7 +58,7 @@ public class DataInitializer {
 
 
             PatientInformations p4 = new PatientInformations();
-            p4.setId("4");
+
             p4.setFirstName("TestEarlyOnset");
             p4.setLastName("Test");
             p4.setDateOfBirth(LocalDate.parse("2002-06-28"));

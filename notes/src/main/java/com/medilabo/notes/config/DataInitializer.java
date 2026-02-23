@@ -10,6 +10,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+/**
+ * Configures the application to initialize the MongoDB collection with sample patient notes data upon startup.
+ * This class checks if the collection is empty before inserting the sample data to avoid duplicates.
+ */
 @Configuration
 public class DataInitializer {
 
